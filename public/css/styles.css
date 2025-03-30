@@ -1,0 +1,4 @@
+.card-img-top {
+    height: 200px; /* Ajusta la altura de las imágenes */
+    object-fit: cover; /* Recorta y ajusta las imágenes */
+}
