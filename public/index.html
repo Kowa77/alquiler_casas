@@ -19,39 +19,68 @@
     </nav>
 
     <div id="lista-casa"></div>
-
+    
     <script>
-        const url = `http://localhost:3000/casas`; 
-        async function verCasas() {
-            const res = await fetch(url);
-            const casas = await res.json();
+          const url = `http://localhost:3000/casas`;
 
-            let lista = document.getElementById('lista-casa');
-            lista.innerHTML = '';
+async function mostrarCasas() {
+    try {
+        const response = await fetch(url);
+        const datos = await response.json();
+        let lista = document.getElementById('lista-casa');
+        lista.innerHTML = ''; // Limpiar el contenido anterior
+        
+        datos.data.home_search.results.forEach(casa => {
+            const urlDetalles = `https://www.realtor.com/realestateandhomes-detail/${casa.permalink}`;
+            lista.innerHTML += `
+                <div class="container mt-4">
+                    <h2>${casa.location.address.line}, ${casa.location.address.city}, ${casa.location.address.state_code} ${casa.location.address.postal_code}</h2>
+                    <p>Link: <a href="${urlDetalles}" target="_blank">Mas Datos (Foto)</a></p>
+                    <p>Precio: ${casa.list_price}</p>
+                    <p>Habitaciones: ${casa.description.beds}</p>
+                    <p>Baños: ${casa.description.baths_consolidated}</p>
+                    <p>Metros cuadrados: ${casa.description.sqft}</p>
+                    <a href="${casa.href}" target="_blank">Ver en Realtor.com</a>
+                </div>
+            `;
+        });
+    } catch (error) {
+        console.error('Error:', error);
+        document.getElementById('lista-casa').innerHTML = '<p>Error al obtener la información de las casas.</p>';
+    }
+}
+mostrarCasas();
+        // const url = `http://localhost:3000/casas`; 
+        // async function verCasas() {
+        //     const res = await fetch(url);
+        //     const casas = await res.json();
 
-            casas.forEach(casa => { // Iterar sobre el array de casas
-                const elemento = `
-                    <div class="cointainer m-2 p-2"> 
-                        <div class="card bg-light" style="width: 18rem;">
-                            <img src="${casa.imagen}" class="card-img-top" alt="..." style="width:100%; height:250px;"> 
-                            <div class="card-body">
-                                <p class="card-title text-center"><span class="fw-bold">Tipo:</span> ${casa.tipo_propiedad}</p>
-                                <p class="card-title text-center"><span class="fw-bold">Ubicacion:</span> ${casa.ubicacion}</p>
-                                <p class="card-text text-center"><span class="fw-bold">Habitaciones:</span> ${casa.habitaciones}</p>
-                                <p class="card-text text-center"><span class="fw-bold">Precio:</span> ${casa.precio}</p>
-                                <p class="card-text text-center" id="color">Color: ${casa.color_exterior}</p>
-                                <p class="card-text text-center"><span class="fw-bold">Estilo:</span> ${casa.estilo}</p>
-                                <p class="card-text text-center"><span class="fw-bold">Tip.const.:</span> ${casa.tipo_construccion}</p>
-                                <p class="card-text text-center"><span class="fw-bold">disponible:</span> ${casa.disponible}</p>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                lista.innerHTML += elemento;
-            });
-        }
+        //     let lista = document.getElementById('lista-casa');
+        //     lista.innerHTML = '';
 
-        verCasas();
+        //     casas.forEach(casa => { // Iterar sobre el array de casas
+        //         const elemento = `
+        //             <div class="cointainer m-2 p-2"> 
+        //                 <div class="card bg-light" style="width: 18rem;">
+        //                     <img src="${casa.imagen}" class="card-img-top" alt="..." style="width:100%; height:250px;"> 
+        //                     <div class="card-body">
+        //                         <p class="card-title text-center"><span class="fw-bold">Tipo:</span> ${casa.tipo_propiedad}</p>
+        //                         <p class="card-title text-center"><span class="fw-bold">Ubicacion:</span> ${casa.ubicacion}</p>
+        //                         <p class="card-text text-center"><span class="fw-bold">Habitaciones:</span> ${casa.habitaciones}</p>
+        //                         <p class="card-text text-center"><span class="fw-bold">Precio:</span> ${casa.precio}</p>
+        //                         <p class="card-text text-center" id="color">Color: ${casa.color_exterior}</p>
+        //                         <p class="card-text text-center"><span class="fw-bold">Estilo:</span> ${casa.estilo}</p>
+        //                         <p class="card-text text-center"><span class="fw-bold">Tip.const.:</span> ${casa.tipo_construccion}</p>
+        //                         <p class="card-text text-center"><span class="fw-bold">disponible:</span> ${casa.disponible}</p>
+        //                     </div>
+        //                 </div>
+        //             </div>
+        //         `;
+        //         lista.innerHTML += elemento;
+        //     });
+        // }
+
+        // verCasas();
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
